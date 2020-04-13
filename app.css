@@ -35,11 +35,9 @@ button {
     font-size: 1.4rem;
     border-radius: 4px;
     padding: 6px 10px;
-    /* border: none; */
     color: #fff;
     background-color: rgba(138, 129, 129, 0.742);
     transition: opacity 0.3s ease-in;
-    /* outline: none; */
     border: none;
 }
 
