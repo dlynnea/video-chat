@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
+
+
+body {
+    font-family: 'Raleway', sans-serif;
+    box-sizing: border-box;
+}
+
+.video-box {
+    border: 1px dotted black;
+}
+
+video {
+    border: 1px solid black;
+}
