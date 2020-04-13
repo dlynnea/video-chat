@@ -4,24 +4,30 @@
 body {
     font-family: 'Raleway', sans-serif;
     box-sizing: border-box;
-    background-color: rgb(196, 222, 192);
+    background: url('/leo.jpg') no-repeat center/cover;
 }
 
 .phat {
-    align-self: center;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+    margin-top: 3rem;
 }
 
 .video-box, .video-btn {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    margin-top: 4rem;
 }
 
 video {
     width: 600px;
     height: 340px;
-    border: 1px solid black;
-    background-color: #fff;
+    border: 1px double black;
+    background-color: rgba(223, 221, 221, 0.338);
+    margin: 1rem;
+    border-radius: 8px;
 }
 
 button {
