@@ -4,12 +4,38 @@
 body {
     font-family: 'Raleway', sans-serif;
     box-sizing: border-box;
+    background-color: rgb(196, 222, 192);
 }
 
-.video-box {
-    border: 1px dotted black;
+.phat {
+    align-self: center;
+}
+
+.video-box, .video-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
 
 video {
+    width: 600px;
+    height: 340px;
     border: 1px solid black;
+    background-color: #fff;
+}
+
+button {
+    font-size: 1.6rem;
+    border-radius: 4px;
+    padding: 6px 8px;
+    border: none;
+    color: #333;
+}
+
+button:hover {
+    background-color: rgb(237, 233, 233);
+}
+
+.video-btn {
+    margin: 1rem;
 }

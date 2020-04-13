@@ -12,8 +12,7 @@ let localStream;
 
 function getLocalStream() {
     navigator.getUserMedia({
-        video: true,
-        audio: true
+        video: true
     }, function(stream) {
         localVideo.srcObject = stream;
     }, function(err) {
