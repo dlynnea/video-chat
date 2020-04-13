@@ -19,6 +19,7 @@ body {
     flex-direction: row;
     justify-content: space-evenly;
     margin-top: 4rem;
+    margin-bottom: 4rem;
 }
 
 video {
@@ -31,15 +32,19 @@ video {
 }
 
 button {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     border-radius: 4px;
-    padding: 6px 8px;
+    padding: 6px 10px;
+    /* border: none; */
+    color: #fff;
+    background-color: rgba(138, 129, 129, 0.742);
+    transition: opacity 0.3s ease-in;
+    /* outline: none; */
     border: none;
-    color: #333;
 }
 
 button:hover {
-    background-color: rgb(237, 233, 233);
+    background-color: rgba(138, 129, 129, 0.942);
 }
 
 .video-btn {
