@@ -1,0 +1,26 @@
+{
+  "name": "video-api",
+  "version": "1.0.0",
+  "description": "node api",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dlynnea/video-chat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dlynnea/video-chat/issues"
+  },
+  "homepage": "https://github.com/dlynnea/video-chat#readme"
+}
