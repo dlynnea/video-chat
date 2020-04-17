@@ -8,9 +8,7 @@ open.addEventListener('click', getLocalStream);
 connect.addEventListener('click', getRemoteStream);
 close.addEventListener('click', closeAllStreams);
 
-let first;
-let second;
-let localStream;
+let first, second, localStream;
 let userMediaParams = { video: true }
 
 function getLocalStream() {
@@ -20,6 +18,7 @@ function getLocalStream() {
 }
 
 function handleUserMedia(stream) {
+    localStream = stream;
     localVideo.srcObject = stream;
 }
 
@@ -27,31 +26,48 @@ function handleUserMediaError(error) {
     console.error(`error: ${error}`);
 }
 
-function getRemoteStream() {
+async function getRemoteStream() {
     first = new RTCPeerConnection();
-    first.addEventListener('icecandidate', event => iceFunction(second, event));
+    first.addEventListener('icecandidate', event => whenIceCandidate(event, second, "one"));
 
     second = new RTCPeerConnection();
-    second.addEventListener('icecandidate', event => iceFunction(first, event));
-    second.addEventListener('addstream', event => addStream);
+    second.addEventListener('icecandidate', event => whenIceCandidate(event, first, "two"));
+    second.addEventListener('addstream', addStream);
+
+    localStream.getTracks().forEach(track => first.addTrack(track, localStream));
+    
+    const offer = await first.createOffer({ offerToReceiveVideo: true });
+    await first.setLocalDescription(offer);
+    await second.setRemoteDescription(offer);
+
+    const answer = await second.createAnswer();
+    await second.setLocalDescription(answer);
+    await first.setRemoteDescription(answer);
 }
 
 function addStream(event) {
-    if(remoteVideo !== event.stream) {
-        remoteVideo.srcObject === event.stream;
+    if(remoteVideo.srcObject !== event.stream) {
+        remoteVideo.srcObject = event.stream;
     }
 }
 
-function getConnection(conn) {
-    return (conn === first) ? 'first' : 'second';
+
+function getConnection(connection) {
+    return connection === first ? 'first' : 'second';
 }
 
-async function iceFunction(conn, event) {
-    await conn.addIceCandidate(event.candidate);
-    console.log(`${getConnection(conn)}`);
+async function whenIceCandidate(event, connection, number) {
+    console.log("number:", number);
+    await connection.addIceCandidate(event.candidate);
+    console.log(`Peer: ${ getConnection(connection) }.`);
+    console.log(`${ event.candidate ? event.candidate.candidate : "who could know?" }`);
 }
 
 function closeAllStreams() {
     localVideo.srcObject = null;
     remoteVideo.srcObject = null;
+    first.close();
+    second.close();
+    first = null;
+    second = null;
 }
