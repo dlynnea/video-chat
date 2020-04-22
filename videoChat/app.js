@@ -43,12 +43,19 @@ async function getRemoteStream() {
     localStream.getTracks().forEach(track => first.addTrack(track, localStream));
     
     const offer = await first.createOffer({ offerToReceiveVideo: true });
-    await first.setLocalDescription(offer);
-    await second.setRemoteDescription(offer);
-
-    const answer = await second.createAnswer();
-    await second.setLocalDescription(answer);
-    await first.setRemoteDescription(answer);
+    socket.emit('offer', offer);
+    socket.on('offer', async offer => {
+        console.log('second on offer')
+        await second.setRemoteDescription(offer);
+        await first.setLocalDescription(offer);
+        const answer = await second.createAnswer();
+        socket.emit('answer', answer);
+    });
+    socket.on('answer', async answer => {
+        console.log('first on answer')
+        await second.setLocalDescription(answer);
+        await first.setRemoteDescription(answer);
+    });
 }
 
 function addStream(event) {

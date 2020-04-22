@@ -14,4 +14,9 @@ io.on('connection', handleSocket);
 function handleSocket(socket) {
     socket.on('open', (message) => console.log(message))
     socket.emit('welcome', 'Hello Human')
+    socket.on('offer', (offer, offerPC) => {
+        console.log(offerPC)
+        socket.emit('offer', offer, offerPC)
+    });
+    socket.on('answer', (answer, answerPC) => socket.emit('answer', answer, answerPC))
 }
