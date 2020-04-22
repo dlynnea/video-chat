@@ -14,7 +14,7 @@ open.addEventListener('click', getLocalStream);
 connect.addEventListener('click', getRemoteStream);
 close.addEventListener('click', closeAllStreams);
 
-let first, second, localStream;
+let offerPC, answerPC, localStream;
 let userMediaParams = { video: true }
 
 function getLocalStream() {
@@ -33,28 +33,28 @@ function handleUserMediaError(error) {
 }
 
 async function getRemoteStream() {
-    first = new RTCPeerConnection();
-    first.addEventListener('icecandidate', event => whenIceCandidate(event, second, "one"));
+    offerPC = new RTCPeerConnection();
+    offerPC.addEventListener('icecandidate', event => whenIceCandidate(event, answerPC, "one"));
 
-    second = new RTCPeerConnection();
-    second.addEventListener('icecandidate', event => whenIceCandidate(event, first, "two"));
-    second.addEventListener('addstream', addStream);
+    answerPC = new RTCPeerConnection();
+    answerPC.addEventListener('icecandidate', event => whenIceCandidate(event, offerPC, "two"));
+    answerPC.addEventListener('addstream', addStream);
 
-    localStream.getTracks().forEach(track => first.addTrack(track, localStream));
+    localStream.getTracks().forEach(track => offerPC.addTrack(track, localStream));
     
-    const offer = await first.createOffer({ offerToReceiveVideo: true });
+    const offer = await offerPC.createOffer({ offerToReceiveVideo: true });
     socket.emit('offer', offer);
     socket.on('offer', async offer => {
-        console.log('second on offer')
-        await second.setRemoteDescription(offer);
-        await first.setLocalDescription(offer);
-        const answer = await second.createAnswer();
+        console.log('answerPC on offer')
+        await answerPC.setRemoteDescription(offer);
+        await offerPC.setLocalDescription(offer);
+        const answer = await answerPC.createAnswer();
         socket.emit('answer', answer);
     });
     socket.on('answer', async answer => {
-        console.log('first on answer')
-        await second.setLocalDescription(answer);
-        await first.setRemoteDescription(answer);
+        console.log('offerPC on answer')
+        await answerPC.setLocalDescription(answer);
+        await offerPC.setRemoteDescription(answer);
     });
 }
 
@@ -65,7 +65,7 @@ function addStream(event) {
 }
 
 function getConnection(connection) {
-    return connection === first ? 'first' : 'second';
+    return connection === offerPC ? 'offerPC' : 'answerPC';
 }
 
 async function whenIceCandidate(event, connection, number) {
@@ -78,8 +78,8 @@ async function whenIceCandidate(event, connection, number) {
 function closeAllStreams() {
     localVideo.srcObject = null;
     remoteVideo.srcObject = null;
-    first.close();
-    second.close();
-    first = null;
-    second = null;
+    offerPC.close();
+    answerPC.close();
+    offerPC = null;
+    answerPC = null;
 }
