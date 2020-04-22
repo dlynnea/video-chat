@@ -57,7 +57,6 @@ function addStream(event) {
     }
 }
 
-
 function getConnection(connection) {
     return connection === first ? 'first' : 'second';
 }
