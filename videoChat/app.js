@@ -3,12 +3,26 @@ const remoteVideo = document.querySelector('#remote');
 const open = document.querySelector('#start');
 const connect = document.querySelector('#connect');
 const close = document.querySelector("#close");
+const goPrivate = document.querySelector("#go-private");
 
-const socket = io('http://localhost:9000');
+const socket = io();
+const P2P = require('socket.io-p2p');
+const p2p = new P2P(socket);
 
 socket.on('welcome', (message) => console.log(message));
 
 socket.emit('open', 'we in!');
+
+p2p.on('peer-msg', function (data) {
+  console.log('From a peer %s', data);
+});
+
+p2p.on('go-private', function (message) {
+    console.log(message);
+});
+
+goPrivate.addEventListener('click', () => p2p.upgrade());
+
 
 open.addEventListener('click', getLocalStream);
 connect.addEventListener('click', getRemoteStream);
@@ -43,7 +57,9 @@ async function getRemoteStream() {
     localStream.getTracks().forEach(track => offerPC.addTrack(track, localStream));
     
     const offer = await offerPC.createOffer({ offerToReceiveVideo: true });
-    socket.emit('offer', offer);
+
+    p2p.emit('offer', offer, offerPC);
+
     socket.on('offer', async offer => {
         console.log('answerPC on offer')
         await answerPC.setRemoteDescription(offer);
@@ -51,6 +67,7 @@ async function getRemoteStream() {
         const answer = await answerPC.createAnswer();
         socket.emit('answer', answer);
     });
+
     socket.on('answer', async answer => {
         console.log('offerPC on answer')
         await answerPC.setLocalDescription(answer);

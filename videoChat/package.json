@@ -1,0 +1,14 @@
+{
+  "name": "video-chat",
+  "version": "1.0.0",
+  "description": "video streaming",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-p2p": "^2.2.0"
+  }
+}
